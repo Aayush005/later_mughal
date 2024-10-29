@@ -1,0 +1,1748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mughal Dynasty MCQ Quiz</title>
+    <style>
+        /* Reset some default styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Accommodate fixed elements */
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Timer Styling */
+        .timer {
+            position: fixed;          /* Fixes the position relative to the viewport */
+            top: 20px;                /* Positions 20px from the top */
+            right: 20px;              /* Positions 20px from the right */
+            font-size: 1.5rem;        /* Sets a readable font size */
+            color: #d9534f;           /* Sets the text color (red) */
+            font-weight: bold;        /* Makes the text bold */
+            z-index: 1000;            /* Ensures the timer stays above other elements */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            padding: 10px 15px;       /* Adds padding around the timer text */
+            border-radius: 5px;       /* Rounds the corners of the timer box */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Adds a subtle shadow for depth */
+        }
+
+        /* Question Map Sidebar Styling */
+        .question-map {
+            position: fixed;          
+            top: 80px;                /* Positioned below the timer */
+            right: 20px;               /* Positioned on the right */
+            width: 180px;              /* Increased width to accommodate 5 columns */
+            background-color: rgba(255, 255, 255, 0.9); 
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 999;             
+            max-height: 90vh;         
+            overflow-y: auto;         
+        }
+
+        .question-map h2 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            color: #007bff;
+        }
+
+        /* Update #questionLinks to Use CSS Grid */
+        #questionLinks {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 5px; /* Adjust the spacing between links as needed */
+            justify-items: center; /* Centers the links within each grid cell */
+        }
+
+        /* Adjust .question-map .question-link Styling */
+        .question-map .question-link {
+            padding: 5px 0; /* Reduces vertical padding */
+            font-size: 0.9rem; /* Slightly smaller font size for better fit */
+            width: 100%; /* Ensures the link takes the full width of the grid cell */
+            box-sizing: border-box; /* Includes padding and border in the element's total width and height */
+            border-radius: 4px; /* Maintains rounded corners */
+            text-align: center; /* Centers the text within the link */
+            background-color: #f8f9fa;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .question-map .question-link:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Add Correct and Incorrect Classes for Highlighting */
+        .question-map .question-link.correct {
+            background-color: #28a745; /* Green background */
+            color: #fff; /* White text */
+            border-color: #28a745; /* Green border */
+        }
+
+        .question-map .question-link.incorrect {
+            background-color: #dc3545; /* Red background */
+            color: #fff; /* White text */
+            border-color: #dc3545; /* Red border */
+        }
+
+        /* Add Attempted Class for Highlighting */
+        .question-map .question-link.attempted {
+            background-color: #17a2b8; /* Blue background for attempted questions */
+            color: #fff; /* White text */
+            border-color: #17a2b8; /* Blue border */
+        }
+
+        /* Submit Button and Score Styling */
+        .question-map .submit-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .question-map .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .question-map .submit-btn:hover {
+            background-color: #218838;
+        }
+
+        .question-map .submit-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .question-map .result {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #17a2b8;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Quiz Container Styling */
+        .quiz-container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            margin-right: 200px; /* Accommodates the question map sidebar on the right */
+            margin-top: 50px;     /* Maintains spacing from the top */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        .question {
+            margin-bottom: 25px;
+        }
+
+        .question p {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 8px;
+            padding: 10px 15px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .options input[type="radio"] {
+            display: none;
+        }
+
+        .options input[type="radio"]:checked + label {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .options label:hover {
+            background-color: #e6f0ff;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background-color: #218838;
+        }
+
+        .submit-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 30px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            color: #17a2b8;
+        }
+
+        /* Feedback Message Styling */
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .feedback.right {
+            color: #28a745; /* Green for correct answers */
+        }
+
+        .feedback.wrong {
+            color: #dc3545; /* Red for incorrect answers */
+        }
+
+        .feedback.not-attempted {
+            color: #6c757d; /* Gray for not attempted */
+        }
+
+        /* Alert when time is low */
+        .alert {
+            animation: blink 1s steps(5, start) infinite;
+        }
+
+        @keyframes blink {
+            to {
+                visibility: hidden;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .quiz-container {
+                margin-right: 0; /* Removes right margin on small screens */
+            }
+
+            .question-map {
+                display: none; /* Hides the question map on small screens */
+            }
+
+            .toggle-question-map {
+                display: block; /* Shows toggle button on small screens */
+            }
+        }
+
+        /* Toggle Button for Question Map (Visible on Small Screens) */
+        .toggle-question-map {
+            position: fixed;
+            top: 20px;
+            right: 20px; /* Positioned on the right */
+            z-index: 1001;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: none; /* Hidden by default */
+        }
+
+        /* Active State for Question Map on Small Screens */
+        .question-map.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Timer Display -->
+    <div class="timer" id="timer">10:00</div>
+
+    <!-- Toggle Button for Question Map (Visible on Small Screens) -->
+    <button class="toggle-question-map" id="toggleQuestionMap">☰</button>
+
+    <!-- Question Map Sidebar -->
+    <div class="question-map" id="questionMap">
+        <h2>Question Map</h2>
+        <div id="questionLinks">
+            <!-- Question links will be injected here by JavaScript -->
+        </div>
+        <!-- Submit Button and Score Display Below the Question Links -->
+        <div class="submit-section">
+            <button type="button" class="submit-btn" id="submitBtn" onclick="checkAnswers()">Submit</button>
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+
+    <div class="quiz-container">
+        <h1>Mughal Dynasty MCQ Quiz</h1>
+        
+        <form id="quizForm">
+            <!-- Questions will be injected here by JavaScript -->
+        </form>
+
+        <!-- Submit Button and Score Display Below the Questions List -->
+        <div class="submit-section">
+            <button type="button" class="submit-btn" id="submitBtnBelow" onclick="checkAnswers()">Submit</button>
+            <div id="resultBelow" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Declare shuffledQuestions globally
+        let shuffledQuestions = [];
+
+        // Replace the following array with your own questions
+        const questions = [
+  // 1. In which year did Muazzam ascend the throne as Bahadur Shah I?
+  {
+    id: 'q1',
+    question: 'In which year did Muazzam ascend the throne as Bahadur Shah I?',
+    options: [
+      { text: '1707', isCorrect: true },
+      { text: '1712', isCorrect: false },
+      { text: '1699', isCorrect: false },
+      { text: '1722', isCorrect: false }
+    ]
+  },
+  // 2. Bahadur Shah I adopted a friendly policy towards which groups?
+  {
+    id: 'q2',
+    question: 'Bahadur Shah I adopted a friendly policy towards which groups?',
+    options: [
+      { text: 'Marathas and Rajputs', isCorrect: true },
+      { text: 'British and Sikhs', isCorrect: false },
+      { text: 'Portuguese and Dutch', isCorrect: false },
+      { text: 'Persians and Afghans', isCorrect: false }
+    ]
+  },
+  // 3. Which tax did Bahadur Shah I stop collecting?
+  {
+    id: 'q3',
+    question: 'Which tax did Bahadur Shah I stop collecting?',
+    options: [
+      { text: 'Zakat', isCorrect: false },
+      { text: 'Jizya', isCorrect: true },
+      { text: 'Khums', isCorrect: false },
+      { text: 'Gharar', isCorrect: false }
+    ]
+  },
+  // 4. Bahadur Shah I died during a campaign against which leader?
+  {
+    id: 'q4',
+    question: 'Bahadur Shah I died during a campaign against which leader?',
+    options: [
+      { text: 'Banda Bahadur', isCorrect: true },
+      { text: 'Shivaji', isCorrect: false },
+      { text: 'Maharana Pratap', isCorrect: false },
+      { text: 'Mir Jafar', isCorrect: false }
+    ]
+  },
+  // 5. Where was Bahadur Shah I buried?
+  {
+    id: 'q5',
+    question: 'Where was Bahadur Shah I buried?',
+    options: [
+      { text: 'Agra', isCorrect: false },
+      { text: 'Delhi', isCorrect: false },
+      { text: 'Aurangabad', isCorrect: true },
+      { text: 'Lahore', isCorrect: false }
+    ]
+  },
+  // 6. Who succeeded Bahadur Shah I as the Mughal emperor?
+  {
+    id: 'q6',
+    question: 'Who succeeded Bahadur Shah I as the Mughal emperor?',
+    options: [
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 7. Jahandar Shah was known as a what?
+  {
+    id: 'q7',
+    question: 'Jahandar Shah was known as a what?',
+    options: [
+      { text: 'Benevolent ruler', isCorrect: false },
+      { text: 'Lampat Murkh', isCorrect: true },
+      { text: 'Warrior king', isCorrect: false },
+      { text: 'Scholar emperor', isCorrect: false }
+    ]
+  },
+  // 8. Which governor was appointed by Jahandar Shah as Subedar of Malwa?
+  {
+    id: 'q8',
+    question: 'Which governor was appointed by Jahandar Shah as Subedar of Malwa?',
+    options: [
+      { text: 'Raja Ajit Singh', isCorrect: false },
+      { text: 'Raja Sawai Jai Singh', isCorrect: true },
+      { text: 'Saadat Khan', isCorrect: false },
+      { text: 'Mir Kasim', isCorrect: false }
+    ]
+  },
+  // 9. Who installed Farrukhsiyar as Mughal emperor?
+  {
+    id: 'q9',
+    question: 'Who installed Farrukhsiyar as Mughal emperor?',
+    options: [
+      { text: 'British East India Company', isCorrect: false },
+      { text: 'Sayyid brothers', isCorrect: true },
+      { text: 'Maratha Peshwa', isCorrect: false },
+      { text: 'Sikh Confederacy', isCorrect: false }
+    ]
+  },
+  // 10. Farrukhsiyar was called Grahanit Kayar by historians. What does it mean?
+  {
+    id: 'q10',
+    question: 'Farrukhsiyar was called Grahanit Kayar by historians. What does it mean?',
+    options: [
+      { text: 'Great ruler', isCorrect: false },
+      { text: 'Despicable coward', isCorrect: true },
+      { text: 'Wise king', isCorrect: false },
+      { text: 'Brave warrior', isCorrect: false }
+    ]
+  },
+  // 11. Which battle led to the defeat of Muhammad Shah by Nadir Shah?
+  {
+    id: 'q11',
+    question: 'Which battle led to the defeat of Muhammad Shah by Nadir Shah?',
+    options: [
+      { text: 'Battle of Panipat', isCorrect: false },
+      { text: 'Battle of Buxar', isCorrect: false },
+      { text: 'Battle of Karnal', isCorrect: true },
+      { text: 'Battle of Plassey', isCorrect: false }
+    ]
+  },
+  // 12. What did Nadir Shah loot from Delhi in 1739?
+  {
+    id: 'q12',
+    question: 'What did Nadir Shah loot from Delhi in 1739?',
+    options: [
+      { text: 'Red Fort', isCorrect: false },
+      { text: 'Kohinoor Diamond', isCorrect: true },
+      { text: 'Fatehpur Sikri', isCorrect: false },
+      { text: 'Jama Masjid', isCorrect: false }
+    ]
+  },
+  // 13. Which Mughal emperor issued a golden decree for free trade to the British East India Company?
+  {
+    id: 'q13',
+    question: 'Which Mughal emperor issued a golden decree for free trade to the British East India Company?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 14. Which Mughal emperor established the independent Hyderabad State?
+  {
+    id: 'q14',
+    question: 'Which Mughal emperor established the independent Hyderabad State?',
+    options: [
+      { text: 'Muhammad Shah', isCorrect: true },
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false }
+    ]
+  },
+  // 15. Which Mughal emperor was called Rangeela Badshah?
+  {
+    id: 'q15',
+    question: 'Which Mughal emperor was called Rangeela Badshah?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: true },
+      { text: 'Bahadur Shah II', isCorrect: false }
+    ]
+  },
+  // 16. Nadir Shah is referred to as the Napoleon of which country?
+  {
+    id: 'q16',
+    question: 'Nadir Shah is referred to as the Napoleon of which country?',
+    options: [
+      { text: 'India', isCorrect: false },
+      { text: 'Persia (Iran)', isCorrect: true },
+      { text: 'Afghanistan', isCorrect: false },
+      { text: 'Turkey', isCorrect: false }
+    ]
+  },
+  // 17. Which emperor finally banned the Jizya tax?
+  {
+    id: 'q17',
+    question: 'Which emperor finally banned the Jizya tax?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: true }
+    ]
+  },
+  // 18. Who succeeded Muhammad Shah as Mughal emperor?
+  {
+    id: 'q18',
+    question: 'Who succeeded Muhammad Shah as Mughal emperor?',
+    options: [
+      { text: 'Ahmad Shah Abdali', isCorrect: true },
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false }
+    ]
+  },
+  // 19. Which battle did Ahmad Shah Abdali win against the Marathas in 1761?
+  {
+    id: 'q19',
+    question: 'Which battle did Ahmad Shah Abdali win against the Marathas in 1761?',
+    options: [
+      { text: 'Battle of Buxar', isCorrect: false },
+      { text: 'Battle of Panipat', isCorrect: true },
+      { text: 'Battle of Karnal', isCorrect: false },
+      { text: 'Battle of Plassey', isCorrect: false }
+    ]
+  },
+  // 20. Shah Alam II signed the Treaty of Allahabad in which year?
+  {
+    id: 'q20',
+    question: 'Shah Alam II signed the Treaty of Allahabad in which year?',
+    options: [
+      { text: '1761', isCorrect: false },
+      { text: '1765', isCorrect: true },
+      { text: '1772', isCorrect: false },
+      { text: '1759', isCorrect: false }
+    ]
+  },
+  // 21. Who built the Heera Mahal in the Red Fort?
+  {
+    id: 'q21',
+    question: 'Who built the Heera Mahal in the Red Fort?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true }
+    ]
+  },
+  // 22. Which emperor was exiled to Rangoon after the 1857 Rebellion?
+  {
+    id: 'q22',
+    question: 'Which emperor was exiled to Rangoon after the 1857 Rebellion?',
+    options: [
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 23. Who was known as Shahe Bekhabar?
+  {
+    id: 'q23',
+    question: 'Who was known as Shahe Bekhabar?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 24. Which emperor was the first Mughal ruler under British protection?
+  {
+    id: 'q24',
+    question: 'Which emperor was the first Mughal ruler under British protection?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Akbar II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false }
+    ]
+  },
+  // 25. Which emperor was assassinated in 1806?
+  {
+    id: 'q25',
+    question: 'Which emperor was assassinated in 1806?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 26. Who established the independent Hyderabad State in 1724?
+  {
+    id: 'q26',
+    question: 'Who established the independent Hyderabad State in 1724?',
+    options: [
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Chinkilich Khan', isCorrect: true },
+      { text: 'Sayyid brothers', isCorrect: false },
+      { text: 'Raja Ajit Singh', isCorrect: false }
+    ]
+  },
+  // 27. Which battle led to the Treaty of Allahabad?
+  {
+    id: 'q27',
+    question: 'Which battle led to the Treaty of Allahabad?',
+    options: [
+      { text: 'Battle of Buxar', isCorrect: true },
+      { text: 'Battle of Panipat', isCorrect: false },
+      { text: 'Battle of Karnal', isCorrect: false },
+      { text: 'Battle of Plassey', isCorrect: false }
+    ]
+  },
+  // 28. Who was the Subedar of Gujarat under Jahandar Shah?
+  {
+    id: 'q28',
+    question: 'Who was the Subedar of Gujarat under Jahandar Shah?',
+    options: [
+      { text: 'Raja Ajit Singh', isCorrect: true },
+      { text: 'Raja Sawai Jai Singh', isCorrect: false },
+      { text: 'Saadat Khan', isCorrect: false },
+      { text: 'Mir Kasim', isCorrect: false }
+    ]
+  },
+  // 29. Which emperor participated in the 1857 Rebellion?
+  {
+    id: 'q29',
+    question: 'Which emperor participated in the 1857 Rebellion?',
+    options: [
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 30. Who was the first unqualified ruler of the Mughal Empire?
+  {
+    id: 'q30',
+    question: 'Who was the first unqualified ruler of the Mughal Empire?',
+    options: [
+      { text: 'Jahandar Shah', isCorrect: true },
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false }
+    ]
+  },
+  // 31. Which Mughal emperor was known for writing poetry under the pen name 'Zafar'?
+  {
+    id: 'q31',
+    question: "Which Mughal emperor was known for writing poetry under the pen name 'Zafar'?",
+    options: [
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 32. Who was called Lampat Murkh?
+  {
+    id: 'q32',
+    question: 'Who was called Lampat Murkh?',
+    options: [
+      { text: 'Jahandar Shah', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 33. Who was the Wazir appointed by Muhammad Shah in 1722?
+  {
+    id: 'q33',
+    question: 'Who was the Wazir appointed by Muhammad Shah in 1722?',
+    options: [
+      { text: 'Saadat Khan', isCorrect: false },
+      { text: 'Chinkilich Khan', isCorrect: true },
+      { text: 'Mir Kasim', isCorrect: false },
+      { text: 'Raja Ajit Singh', isCorrect: false }
+    ]
+  },
+  // 34. Which emperor was criticized by historian Khafi Khan?
+  {
+    id: 'q34',
+    question: 'Which emperor was criticized by historian Khafi Khan?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 35. Which emperor freed Shambhaji's son Shahu?
+  {
+    id: 'q35',
+    question: "Which emperor freed Shambhaji's son Shahu?",
+    options: [
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 36. Which Mughal emperor was called Grahanit Kayar?
+  {
+    id: 'q36',
+    question: 'Which Mughal emperor was called Grahanit Kayar?',
+    options: [
+      { text: 'Farrukhsiyar', isCorrect: true },
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false }
+    ]
+  },
+  // 37. Who was the first Mughal emperor under British protection?
+  {
+    id: 'q37',
+    question: 'Who was the first Mughal emperor under British protection?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Akbar II', isCorrect: true },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 38. Which emperor was exiled to Rangoon by the British?
+  {
+    id: 'q38',
+    question: 'Which emperor was exiled to Rangoon by the British?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 39. Who assassinated Farrukhsiyar?
+  {
+    id: 'q39',
+    question: 'Who assassinated Farrukhsiyar?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Sayyid brothers', isCorrect: true },
+      { text: 'Chinkilich Khan', isCorrect: false },
+      { text: 'Ahmad Shah Abdali', isCorrect: false }
+    ]
+  },
+  // 40. Which emperor was known as the last Mughal emperor?
+  {
+    id: 'q40',
+    question: 'Which emperor was known as the last Mughal emperor?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true }
+    ]
+  },
+  // 41. Who was known as the Napoleon of Iran?
+  {
+    id: 'q41',
+    question: 'Who was known as the Napoleon of Iran?',
+    options: [
+      { text: 'Nadir Shah', isCorrect: true },
+      { text: 'Ahmad Shah Abdali', isCorrect: false },
+      { text: 'Mir Kasim', isCorrect: false },
+      { text: 'Saadat Khan', isCorrect: false }
+    ]
+  },
+  // 42. Which Mughal emperor built the Heera Mahal in the Red Fort?
+  {
+    id: 'q42',
+    question: 'Which Mughal emperor built the Heera Mahal in the Red Fort?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 43. Which emperor established independent power in Farrukhabad?
+  {
+    id: 'q43',
+    question: 'Which emperor established independent power in Farrukhabad?',
+    options: [
+      { text: 'Chinkilich Khan', isCorrect: false },
+      { text: 'Bangash Nawabs', isCorrect: true },
+      { text: 'Mir Kasim', isCorrect: false },
+      { text: 'Raja Ajit Singh', isCorrect: false }
+    ]
+  },
+  // 44. Which emperor signed the golden decree granting free trade to the British East India Company?
+  {
+    id: 'q44',
+    question: 'Which emperor signed the golden decree granting free trade to the British East India Company?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 45. Which Mughal emperor was involved in a campaign against Banda Bahadur?
+  {
+    id: 'q45',
+    question: 'Which Mughal emperor was involved in a campaign against Banda Bahadur?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 46. Who was the governor of Malwa under Jahandar Shah?
+  {
+    id: 'q46',
+    question: 'Who was the governor of Malwa under Jahandar Shah?',
+    options: [
+      { text: 'Raja Ajit Singh', isCorrect: false },
+      { text: 'Raja Sawai Jai Singh', isCorrect: true },
+      { text: 'Saadat Khan', isCorrect: false },
+      { text: 'Mir Kasim', isCorrect: false }
+    ]
+  },
+  // 47. Who was the Sayyid brothers' first installed emperor?
+  {
+    id: 'q47',
+    question: "Who was the Sayyid brothers' first installed emperor?",
+    options: [
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Rafi-ud-Daulah', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 48. Which emperor was buried in Aurangzeb's tomb courtyard?
+  {
+    id: 'q48',
+    question: "Which emperor was buried in Aurangzeb's tomb courtyard?",
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 49. Which Mughal emperor signed the Treaty of Allahabad in 1765?
+  {
+    id: 'q49',
+    question: 'Which Mughal emperor signed the Treaty of Allahabad in 1765?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Ahmad Shah Abdali', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 50. Which emperor was ruling when British occupied Delhi in 1803?
+  {
+    id: 'q50',
+    question: 'Which emperor was ruling when British occupied Delhi in 1803?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 51. Which emperor established the independent Hyderabad State?
+  {
+    id: 'q51',
+    question: 'Which emperor established the independent Hyderabad State?',
+    options: [
+      { text: 'Chinkilich Khan', isCorrect: true },
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Sayyid brothers', isCorrect: false }
+    ]
+  },
+  // 52. Who was the first Mughal emperor under British control?
+  {
+    id: 'q52',
+    question: 'Who was the first Mughal emperor under British control?',
+    options: [
+      { text: 'Akbar II', isCorrect: true },
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 53. Who was the Wazir appointed by Muhammad Shah who later established the Hyderabad State?
+  {
+    id: 'q53',
+    question: 'Who was the Wazir appointed by Muhammad Shah who later established the Hyderabad State?',
+    options: [
+      { text: 'Saadat Khan', isCorrect: false },
+      { text: 'Chinkilich Khan', isCorrect: true },
+      { text: 'Mir Kasim', isCorrect: false },
+      { text: 'Raja Ajit Singh', isCorrect: false }
+    ]
+  },
+  // 54. Who was the son of Shah Jahan II?
+  {
+    id: 'q54',
+    question: 'Who was the son of Shah Jahan II?',
+    options: [
+      { text: 'Roshan Akhtar', isCorrect: true },
+      { text: 'Mir Kasim', isCorrect: false },
+      { text: 'Raja Ajit Singh', isCorrect: false },
+      { text: 'Rafi-ud-Daulah', isCorrect: false }
+    ]
+  },
+  // 55. Which emperor was known as Shahe Bekhabar?
+  {
+    id: 'q55',
+    question: 'Which emperor was known as Shahe Bekhabar?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 56. Which emperor was assassinated during a campaign against Banda Bahadur?
+  {
+    id: 'q56',
+    question: 'Which emperor was assassinated during a campaign against Banda Bahadur?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 57. Which emperor was called Rangeela Badshah?
+  {
+    id: 'q57',
+    question: 'Which emperor was called Rangeela Badshah?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: true },
+      { text: 'Bahadur Shah II', isCorrect: false }
+    ]
+  },
+  // 58. Under whose reign did the British East India Company gain significant power?
+  {
+    id: 'q58',
+    question: 'Under whose reign did the British East India Company gain significant power?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Ahmad Shah Abdali', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 59. Who was the Mughal emperor during Ahmad Shah Abdali’s final attack on India?
+  {
+    id: 'q59',
+    question: 'Who was the Mughal emperor during Ahmad Shah Abdali’s final attack on India?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Ahmad Shah Abdali', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 60. Which Mughal emperor was the son of Azimushshan and installed by Sayyid brothers?
+  {
+    id: 'q60',
+    question: 'Which Mughal emperor was the son of Azimushshan and installed by Sayyid brothers?',
+    options: [
+      { text: 'Farrukhsiyar', isCorrect: true },
+      { text: 'Rafi-ud-Daulah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 61. Which Mughal emperor supported Nawab Shujauddaulah in the Battle of Buxar?
+  {
+    id: 'q61',
+    question: 'Which Mughal emperor supported Nawab Shujauddaulah in the Battle of Buxar?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 62. Which Mughal emperor was assassinated by the British in 1806?
+  {
+    id: 'q62',
+    question: 'Which Mughal emperor was assassinated by the British in 1806?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 63. Which Mughal emperor had a supportive relationship with Nawab Mir Kasim of Bengal?
+  {
+    id: 'q63',
+    question: 'Which Mughal emperor had a supportive relationship with Nawab Mir Kasim of Bengal?',
+    options: [
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false }
+    ]
+  },
+  // 64. During whose reign did Ahmad Shah Abdali make the last attack on India?
+  {
+    id: 'q64',
+    question: 'During whose reign did Ahmad Shah Abdali make the last attack on India?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 65. Who was the Mughal emperor when the British occupied Delhi in 1803?
+  {
+    id: 'q65',
+    question: 'Who was the Mughal emperor when the British occupied Delhi in 1803?',
+    options: [
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 66. Which emperor was the first to be referred to as "the last Mughal emperor" by Sir Sidney Owen?
+  {
+    id: 'q66',
+    question: 'Which emperor was the first to be referred to as "the last Mughal emperor" by Sir Sidney Owen?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false }
+    ]
+  },
+  // 67. Which Mughal emperor was assassinated by Farrukhsiyar with the help of the Sayyid brothers?
+  {
+    id: 'q67',
+    question: 'Which Mughal emperor was assassinated by Farrukhsiyar with the help of the Sayyid brothers?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 68. Who was the Mughal emperor during the signing of the Treaty of Allahabad?
+  {
+    id: 'q68',
+    question: 'Who was the Mughal emperor during the signing of the Treaty of Allahabad?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 69. Which Mughal emperor was known for supporting Nawab Mir Kasim and Nawab Shujauddaulah against the British?
+  {
+    id: 'q69',
+    question: 'Which Mughal emperor was known for supporting Nawab Mir Kasim and Nawab Shujauddaulah against the British?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false }
+    ]
+  },
+  // 70. Under which emperor did the British East India Company gain significant influence in Delhi?
+  {
+    id: 'q70',
+    question: 'Under which emperor did the British East India Company gain significant influence in Delhi?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 71. Which Mughal emperor was referred to as "Lampat Murkh" (foolish ruler)?
+  {
+    id: 'q71',
+    question: 'Which Mughal emperor was referred to as "Lampat Murkh" (foolish ruler)?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 72. Who was the Mughal emperor when Ahmad Shah Abdali fought the third Battle of Panipat?
+  {
+    id: 'q72',
+    question: 'Who was the Mughal emperor when Ahmad Shah Abdali fought the third Battle of Panipat?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 73. Which Mughal emperor had his tomb in Rangoon?
+  {
+    id: 'q73',
+    question: 'Which Mughal emperor had his tomb in Rangoon?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true }
+    ]
+  },
+  // 74. Who was the Mughal emperor during the final invasion of India by Ahmad Shah Abdali in 1767?
+  {
+    id: 'q74',
+    question: 'Who was the Mughal emperor during the final invasion of India by Ahmad Shah Abdali in 1767?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 75. Which Mughal emperor was known for writing poetry under the pen name 'Zafar'?
+  {
+    id: 'q75',
+    question: "Which Mughal emperor was known for writing poetry under the pen name 'Zafar'?",
+    options: [
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 76. Who was the Mughal emperor when the British East India Company signed the Treaty of Allahabad?
+  {
+    id: 'q76',
+    question: 'Who was the Mughal emperor when the British East India Company signed the Treaty of Allahabad?',
+    options: [
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 77. Which Mughal emperor was the first to be made under British protection?
+  {
+    id: 'q77',
+    question: 'Which Mughal emperor was the first to be made under British protection?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Akbar II', isCorrect: true },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 78. Which Mughal emperor was assassinated in Rangoon in 1806?
+  {
+    id: 'q78',
+    question: 'Which Mughal emperor was assassinated in Rangoon in 1806?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 79. Who was the Mughal emperor when Chinkilich Khan established the independent Hyderabad State?
+  {
+    id: 'q79',
+    question: 'Who was the Mughal emperor when Chinkilich Khan established the independent Hyderabad State?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: true },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 80. Which Mughal emperor was known for his friendly policies towards Jats, Marathas, and Rajputs?
+  {
+    id: 'q80',
+    question: 'Which Mughal emperor was known for his friendly policies towards Jats, Marathas, and Rajputs?',
+    options: [
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 81. Which Mughal emperor supported Nawab Shujauddaulah in the Battle of Buxar?
+  {
+    id: 'q81',
+    question: 'Which Mughal emperor supported Nawab Shujauddaulah in the Battle of Buxar?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 82. Which Mughal emperor was assassinated by the British in 1806?
+  {
+    id: 'q82',
+    question: 'Which Mughal emperor was assassinated by the British in 1806?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 83. Which Mughal emperor had a supportive relationship with Nawab Mir Kasim of Bengal?
+  {
+    id: 'q83',
+    question: 'Which Mughal emperor had a supportive relationship with Nawab Mir Kasim of Bengal?',
+    options: [
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false }
+    ]
+  },
+  // 84. During whose reign did Ahmad Shah Abdali make the last attack on India?
+  {
+    id: 'q84',
+    question: 'During whose reign did Ahmad Shah Abdali make the last attack on India?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 85. Who was the Mughal emperor when the British occupied Delhi in 1803?
+  {
+    id: 'q85',
+    question: 'Who was the Mughal emperor when the British occupied Delhi in 1803?',
+    options: [
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 86. Which emperor was the first to be referred to as "the last Mughal emperor" by Sir Sidney Owen?
+  {
+    id: 'q86',
+    question: 'Which emperor was the first to be referred to as "the last Mughal emperor" by Sir Sidney Owen?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false }
+    ]
+  },
+  // 87. Which Mughal emperor was assassinated by Farrukhsiyar with the help of the Sayyid brothers?
+  {
+    id: 'q87',
+    question: 'Which Mughal emperor was assassinated by Farrukhsiyar with the help of the Sayyid brothers?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 88. Who was the Mughal emperor during the signing of the Treaty of Allahabad?
+  {
+    id: 'q88',
+    question: 'Who was the Mughal emperor during the signing of the Treaty of Allahabad?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 89. Which Mughal emperor was known for supporting Nawab Mir Kasim and Nawab Shujauddaulah against the British?
+  {
+    id: 'q89',
+    question: 'Which Mughal emperor was known for supporting Nawab Mir Kasim and Nawab Shujauddaulah against the British?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false }
+    ]
+  },
+  // 90. Under which emperor did the British East India Company gain significant influence in Delhi?
+  {
+    id: 'q90',
+    question: 'Under which emperor did the British East India Company gain significant influence in Delhi?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 91. Which Mughal emperor was referred to as "Lampat Murkh" (foolish ruler)?
+  {
+    id: 'q91',
+    question: 'Which Mughal emperor was referred to as "Lampat Murkh" (foolish ruler)?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 92. Who was the Mughal emperor when Ahmad Shah Abdali fought the third Battle of Panipat?
+  {
+    id: 'q92',
+    question: 'Who was the Mughal emperor when Ahmad Shah Abdali fought the third Battle of Panipat?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 93. Which Mughal emperor had his tomb in Rangoon?
+  {
+    id: 'q93',
+    question: 'Which Mughal emperor had his tomb in Rangoon?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true }
+    ]
+  },
+  // 94. Who was the Mughal emperor during the final invasion of India by Ahmad Shah Abdali in 1767?
+  {
+    id: 'q94',
+    question: 'Who was the Mughal emperor during the final invasion of India by Ahmad Shah Abdali in 1767?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 95. Which Mughal emperor was known for writing poetry under the pen name 'Zafar'?
+  {
+    id: 'q95',
+    question: "Which Mughal emperor was known for writing poetry under the pen name 'Zafar'?",
+    options: [
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 96. Who was the Mughal emperor when the British East India Company signed the Treaty of Allahabad?
+  {
+    id: 'q96',
+    question: 'Who was the Mughal emperor when the British East India Company signed the Treaty of Allahabad?',
+    options: [
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 97. Which Mughal emperor was the first to be made under British protection?
+  {
+    id: 'q97',
+    question: 'Which Mughal emperor was the first to be made under British protection?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: false },
+      { text: 'Akbar II', isCorrect: true },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 98. Which Mughal emperor was assassinated in Rangoon in 1806?
+  {
+    id: 'q98',
+    question: 'Which Mughal emperor was assassinated in Rangoon in 1806?',
+    options: [
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 99. Who was the Mughal emperor when Chinkilich Khan established the independent Hyderabad State?
+  {
+    id: 'q99',
+    question: 'Who was the Mughal emperor when Chinkilich Khan established the independent Hyderabad State?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: true },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 100. Which Mughal emperor was known for his friendly policies towards Jats, Marathas, and Rajputs?
+  {
+    id: 'q100',
+    question: 'Which Mughal emperor was known for his friendly policies towards Jats, Marathas, and Rajputs?',
+    options: [
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah I', isCorrect: true },
+      { text: 'Farrukhsiyar', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 101. During whose reign did the Sayyid brothers assassinate Farrukhsiyar?
+  {
+    id: 'q101',
+    question: 'During whose reign did the Sayyid brothers assassinate Farrukhsiyar?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: true },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 102. Who was the Mughal emperor during the establishment of the independent Hyderabad State by Chinkilich Khan?
+  {
+    id: 'q102',
+    question: 'Who was the Mughal emperor during the establishment of the independent Hyderabad State by Chinkilich Khan?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Muhammad Shah', isCorrect: true },
+      { text: 'Shah Alam II', isCorrect: false }
+    ]
+  },
+  // 103. Which Mughal emperor signed the treaty that led to British control over Delhi?
+  {
+    id: 'q103',
+    question: 'Which Mughal emperor signed the treaty that led to British control over Delhi?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Akbar II', isCorrect: false }
+    ]
+  },
+  // 104. Who was the Mughal emperor when the Heera Mahal was built in the Red Fort?
+  {
+    id: 'q104',
+    question: 'Who was the Mughal emperor when the Heera Mahal was built in the Red Fort?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Bahadur Shah II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  },
+  // 105. Which Mughal emperor was involved in both the Battle of Panipat and the Treaty of Allahabad?
+  {
+    id: 'q105',
+    question: 'Which Mughal emperor was involved in both the Battle of Panipat and the Treaty of Allahabad?',
+    options: [
+      { text: 'Bahadur Shah I', isCorrect: false },
+      { text: 'Jahandar Shah', isCorrect: false },
+      { text: 'Shah Alam II', isCorrect: true },
+      { text: 'Muhammad Shah', isCorrect: false }
+    ]
+  }
+];
+
+
+
+
+        // Function to shuffle an array using Fisher-Yates algorithm
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Function to render the questions dynamically
+        function renderQuestions() {
+            const quizForm = document.getElementById('quizForm');
+            const questionsArray = getQuestions(); // Retrieve the questions array
+            if (!questionsArray || !Array.isArray(questionsArray) || questionsArray.length < 25) {
+                quizForm.innerHTML = '<p>Insufficient questions available. Please ensure there are at least 25 questions in the questions array.</p>';
+                return;
+            }
+
+            // Randomly select 25 questions from the available questions
+            const selectedQuestions = getRandomQuestions(questionsArray, 25);
+
+            // Assign shuffledQuestions to the global variable
+            shuffledQuestions = shuffleArray([...selectedQuestions]); // Create a copy and shuffle
+
+            shuffledQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                questionDiv.id = `question-${index + 1}`; // Assign unique ID
+
+                // Question text
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${q.question}`;
+                questionDiv.appendChild(questionText);
+
+                // Options
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('options');
+
+                // Shuffle options and assign back to q.options
+                q.options = shuffleArray([...q.options]);
+                const shuffledOptions = q.options;
+
+                // Assign labels A, B, C, D dynamically
+                const labels = ['A', 'B', 'C', 'D'];
+
+                shuffledOptions.forEach((option, optIndex) => {
+                    const optionId = `${q.id}_option${optIndex + 1}`; // Unique ID for each option
+
+                    const radioInput = document.createElement('input');
+                    radioInput.type = 'radio';
+                    radioInput.id = optionId;
+                    radioInput.name = q.id;
+                    radioInput.value = labels[optIndex]; // Assign label as value
+
+                    const label = document.createElement('label');
+                    label.htmlFor = optionId;
+                    label.textContent = `${labels[optIndex]}) ${option.text}`;
+
+                    optionsDiv.appendChild(radioInput);
+                    optionsDiv.appendChild(label);
+
+                    // Add Attempted Class when an option is selected
+                    radioInput.addEventListener('change', function() {
+                        const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                        if (questionMapLink && !questionMapLink.classList.contains('correct') && !questionMapLink.classList.contains('incorrect')) {
+                            questionMapLink.classList.add('attempted');
+                        }
+                    });
+                });
+
+                questionDiv.appendChild(optionsDiv);
+
+                // Add Feedback Div Below Options
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.classList.add('feedback');
+                feedbackDiv.id = `feedback-${index + 1}`; // Unique ID for each feedback div
+                questionDiv.appendChild(feedbackDiv);
+
+                quizForm.appendChild(questionDiv);
+            });
+
+            generateQuestionMap(shuffledQuestions.length);
+        }
+
+        // Function to retrieve the questions array
+        function getQuestions() {
+            // Replace this with your actual questions array
+            return questions; // Assuming 'questions' is defined globally
+        }
+
+        // Function to randomly select n questions from the questions array
+        function getRandomQuestions(questionsArray, n) {
+            const shuffled = shuffleArray([...questionsArray]);
+            return shuffled.slice(0, n);
+        }
+
+        // Function to generate the Question Map links
+        function generateQuestionMap(totalQuestions) {
+            const questionLinksDiv = document.getElementById('questionLinks');
+            questionLinksDiv.innerHTML = ''; // Clear any existing links
+
+            for (let i = 1; i <= totalQuestions; i++) {
+                const link = document.createElement('a');
+                link.href = `#question-${i}`;
+                link.classList.add('question-link');
+                link.textContent = `Q${i}`;
+
+                questionLinksDiv.appendChild(link);
+            }
+        }
+
+        // Timer Functionality
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            const countdown = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                // Add alert class when time is less than 1 minute
+                if (timer <= 60 && timer > 0) { // 60 seconds = 1 minute
+                    display.classList.add('alert');
+                }
+
+                if (--timer < 0) {
+                    clearInterval(countdown);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        // Function to automatically submit the quiz when time is up
+        function autoSubmit() {
+            alert("Time's up! The quiz will now be submitted.");
+            checkAnswers();
+        }
+
+        // Initialize the quiz on page load
+        window.onload = function () {
+            renderQuestions(); // Render questions on page load
+            const tenMinutes = 60 * 10, // 10 minutes in seconds
+                  display = document.getElementById('timer');
+            startTimer(tenMinutes, display);
+        };
+
+        // Function to check answers and display the result
+        function checkAnswers() {
+            let score = 0;
+            let totalQuestions = shuffledQuestions.length; // Total number of questions
+
+            shuffledQuestions.forEach((q, index) => { // Iterate over each question
+                const selectedOption = document.querySelector(`input[name="${q.id}"]:checked`);
+                const feedbackDiv = document.getElementById(`feedback-${index + 1}`);
+                
+                if (selectedOption) {
+                    // Get the selected label (A, B, C, D)
+                    const selectedLabel = selectedOption.value;
+                    // Map label to option index
+                    const labelIndex = ['A', 'B', 'C', 'D'].indexOf(selectedLabel);
+                    if (labelIndex !== -1 && q.options[labelIndex].isCorrect) {
+                        score += 1; // Add 1 mark for correct answer
+
+                        // Mark the question link as correct in the Question Map
+                        const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                        if (questionMapLink) {
+                            questionMapLink.classList.add('correct');
+                            questionMapLink.classList.remove('incorrect', 'attempted');
+                        }
+
+                        // Update Feedback Below the Question
+                        if (feedbackDiv) {
+                            feedbackDiv.textContent = 'Right';
+                            feedbackDiv.classList.add('right');
+                            feedbackDiv.classList.remove('wrong', 'not-attempted');
+                        }
+                    } else {
+                        score -= 0.5; // Deduct 0.5 marks for incorrect answer
+
+                        // Mark the question link as incorrect in the Question Map
+                        const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                        if (questionMapLink) {
+                            questionMapLink.classList.add('incorrect');
+                            questionMapLink.classList.remove('correct', 'attempted');
+                        }
+
+                        // Update Feedback Below the Question
+                        if (feedbackDiv) {
+                            feedbackDiv.textContent = 'Wrong';
+                            feedbackDiv.classList.add('wrong');
+                            feedbackDiv.classList.remove('right', 'not-attempted');
+                        }
+                    }
+                } else {
+                    // If the question was not answered, mark as not attempted
+                    const questionMapLink = document.querySelector(`.question-map .question-link[href="#question-${index + 1}"]`);
+                    if (questionMapLink) {
+                        // Remove both classes if the question was not answered
+                        questionMapLink.classList.remove('correct', 'incorrect', 'attempted');
+                    }
+
+                    // Update Feedback Below the Question
+                    if (feedbackDiv) {
+                        feedbackDiv.textContent = 'Not Attempted';
+                        feedbackDiv.classList.add('not-attempted');
+                        feedbackDiv.classList.remove('right', 'wrong');
+                    }
+                }
+            });
+
+            // Round the score to one decimal place
+            score = Math.round(score * 10) / 10;
+
+            // Update the result in the Question Map Sidebar
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = `You scored ${score} out of ${totalQuestions}`;
+
+            // Update the result below the questions list
+            const resultDivBelow = document.getElementById('resultBelow');
+            resultDivBelow.textContent = `You scored ${score} out of ${totalQuestions}`;
+
+            // Disable all inputs to prevent changes after submission
+            const inputs = document.querySelectorAll('input[type="radio"]');
+            inputs.forEach(input => {
+                input.disabled = true;
+            });
+
+            // Disable the submit buttons to prevent multiple submissions
+            const submitButton = document.getElementById('submitBtn');
+            submitButton.disabled = true;
+
+            const submitButtonBelow = document.getElementById('submitBtnBelow');
+            if (submitButtonBelow) {
+                submitButtonBelow.disabled = true;
+            }
+        }
+
+        // Toggle Question Map on small screens
+        const toggleBtn = document.getElementById('toggleQuestionMap');
+        const questionMap = document.getElementById('questionMap');
+
+        toggleBtn.addEventListener('click', () => {
+            questionMap.classList.toggle('active');
+        });
+    </script>
+</body>
+</html>
